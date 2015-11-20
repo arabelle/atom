@@ -154,7 +154,7 @@ describe "TokenizedBuffer", ->
           it "updates tokens to reflect the change", ->
             buffer.setTextInRange([[0, 0], [2, 0]], "foo()\n7\n")
 
-            expect(tokenizedBuffer.tokenizedLineForRow(0).tokens[1]).toEqual(value: '(', scopes: ['source.js', 'meta.brace.round.js'])
+            expect(tokenizedBuffer.tokenizedLineForRow(0).tokens[1]).toEqual(value: '(', scopes: ['source.js', 'meta.function-call.js', 'punctuation.definition.arguments.begin.js'])
             expect(tokenizedBuffer.tokenizedLineForRow(1).tokens[0]).toEqual(value: '7', scopes: ['source.js', 'constant.numeric.js'])
             # line 2 is unchanged
             expect(tokenizedBuffer.tokenizedLineForRow(2).tokens[2]).toEqual(value: 'if', scopes: ['source.js', 'keyword.control.js'])
@@ -201,13 +201,13 @@ describe "TokenizedBuffer", ->
             expect(tokenizedBuffer.tokenizedLineForRow(0).tokens[0]).toEqual(value: 'var', scopes: ['source.js', 'storage.modifier.js'])
 
             # previous line 3 should be combined with input to form line 1
-            expect(tokenizedBuffer.tokenizedLineForRow(1).tokens[0]).toEqual(value: 'foo', scopes: ['source.js'])
-            expect(tokenizedBuffer.tokenizedLineForRow(1).tokens[6]).toEqual(value: '=', scopes: ['source.js', 'keyword.operator.js'])
+            expect(tokenizedBuffer.tokenizedLineForRow(1).tokens[0]).toEqual(value: 'foo', scopes: ['source.js', 'meta.function-call.js', 'entity.name.function.js'])
+            expect(tokenizedBuffer.tokenizedLineForRow(1).tokens[6]).toEqual(value: '=', scopes: ['source.js', 'keyword.operator.assignment.js'])
 
             # lines below deleted regions should be shifted upward
             expect(tokenizedBuffer.tokenizedLineForRow(2).tokens[2]).toEqual(value: 'while', scopes: ['source.js', 'keyword.control.js'])
-            expect(tokenizedBuffer.tokenizedLineForRow(3).tokens[4]).toEqual(value: '=', scopes: ['source.js', 'keyword.operator.js'])
-            expect(tokenizedBuffer.tokenizedLineForRow(4).tokens[4]).toEqual(value: '<', scopes: ['source.js', 'keyword.operator.js'])
+            expect(tokenizedBuffer.tokenizedLineForRow(3).tokens[4]).toEqual(value: '=', scopes: ['source.js', 'keyword.operator.assignment.js'])
+            expect(tokenizedBuffer.tokenizedLineForRow(4).tokens[4]).toEqual(value: '<', scopes: ['source.js', 'keyword.operator.comparison.js'])
 
             expect(changeHandler).toHaveBeenCalled()
             [event] = changeHandler.argsForCall[0]
@@ -245,16 +245,16 @@ describe "TokenizedBuffer", ->
             expect(tokenizedBuffer.tokenizedLineForRow(0).tokens[0]).toEqual( value: 'var', scopes: ['source.js', 'storage.modifier.js'])
 
             # 3 new lines inserted
-            expect(tokenizedBuffer.tokenizedLineForRow(1).tokens[0]).toEqual(value: 'foo', scopes: ['source.js'])
-            expect(tokenizedBuffer.tokenizedLineForRow(2).tokens[0]).toEqual(value: 'bar', scopes: ['source.js'])
-            expect(tokenizedBuffer.tokenizedLineForRow(3).tokens[0]).toEqual(value: 'baz', scopes: ['source.js'])
+            expect(tokenizedBuffer.tokenizedLineForRow(1).tokens[0]).toEqual(value: 'foo', scopes: ['source.js', 'meta.function-call.js', 'entity.name.function.js'])
+            expect(tokenizedBuffer.tokenizedLineForRow(2).tokens[0]).toEqual(value: 'bar', scopes: ['source.js', 'meta.function-call.js', 'entity.name.function.js'])
+            expect(tokenizedBuffer.tokenizedLineForRow(3).tokens[0]).toEqual(value: 'baz', scopes: ['source.js', 'meta.function-call.js', 'entity.name.function.js'])
 
             # previous line 2 is joined with quux() on line 4
-            expect(tokenizedBuffer.tokenizedLineForRow(4).tokens[0]).toEqual(value: 'quux', scopes: ['source.js'])
+            expect(tokenizedBuffer.tokenizedLineForRow(4).tokens[0]).toEqual(value: 'quux', scopes: ['source.js', 'meta.function-call.js', 'entity.name.function.js'])
             expect(tokenizedBuffer.tokenizedLineForRow(4).tokens[4]).toEqual(value: 'if', scopes: ['source.js', 'keyword.control.js'])
 
             # previous line 3 is pushed down to become line 5
-            expect(tokenizedBuffer.tokenizedLineForRow(5).tokens[4]).toEqual(value: '=', scopes: ['source.js', 'keyword.operator.js'])
+            expect(tokenizedBuffer.tokenizedLineForRow(5).tokens[4]).toEqual(value: '=', scopes: ['source.js', 'keyword.operator.assignment.js'])
 
             expect(changeHandler).toHaveBeenCalled()
             [event] = changeHandler.argsForCall[0]
