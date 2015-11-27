@@ -70,6 +70,7 @@
   'ctrl-k down': 'pane:split-down' # Atom Specific
   'ctrl-k left': 'pane:split-left' # Atom Specific
   'ctrl-k right': 'pane:split-right' # Atom Specific
+  'ctrl-k then right': 'pane:split-right-text' # Atom Specific
   'ctrl-k ctrl-w': 'pane:close' # Atom Specific
   'ctrl-k alt-ctrl-w': 'pane:close-other-items' # Atom Specific
   'ctrl-k ctrl-p': 'window:focus-previous-pane'
