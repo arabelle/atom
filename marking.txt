@@ -1,0 +1,4 @@
+Change the implementation of the tab-length so it can be any number between 1
+and 100 inclusively instead of being one of the set enum values.
+Implementation: "tabLength:" configuration
+File: src/config-schema.coffee
